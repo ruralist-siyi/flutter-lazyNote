@@ -70,3 +70,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  assets:
+    - images/xiongmao.png
+    - images/target.png
+    - images/notebook.png
+    - images/exit.png
