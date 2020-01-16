@@ -6,7 +6,6 @@ class ObjectiveListWidget extends StatefulWidget {
 }
 
 class _ObjectiveListState extends State<ObjectiveListWidget> {
-  
   @override
   void initState() {
     print('objectiveList render');
@@ -15,10 +14,6 @@ class _ObjectiveListState extends State<ObjectiveListWidget> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Column(
-        children: [
-          Text('objectiveList')
-        ]
-    );
+    return Column(children: [Text('objectiveList')]);
   }
 }

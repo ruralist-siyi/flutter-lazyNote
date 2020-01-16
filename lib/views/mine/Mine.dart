@@ -7,126 +7,84 @@ class MineWidget extends StatefulWidget {
 }
 
 class _MineState extends State<MineWidget> {
+  List listItem;
 
   @override
   void initState() {
     print('Mine render');
+    listItem = [
+      {"icon": "images/target.png", "title": "建小目标"},
+      {"icon": "images/notebook.png", "title": "记小本本"},
+      {"icon": "images/exit.png", "title": "退出登录"}
+    ];
+  }
+
+  Widget renderList() {
+    List<Widget> items = [];
+    for (var item in listItem) {
+      items.add(
+        Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                border: Border(
+              bottom: Divider.createBorderSide(context, color: Colors.grey),
+            )),
+            child: Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Image.asset(item['icon'], width: 30),
+                    Container(
+                      child: Text(item['title']),
+                      margin: EdgeInsets.only(left: 10.0),
+                    )
+                  ],
+                ),
+                Icon(Icons.arrow_right, color: Colors.grey)
+              ],
+            )),
+      );
+    }
+    return Column(
+      children: items,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Column(
-        children: [
-          Flex(
-            direction: Axis.horizontal,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: Container(
+    return Column(children: [
+      Flex(
+          direction: Axis.horizontal,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              child: Container(
                   color: Colors.blue,
                   height: 200,
                   padding: EdgeInsets.only(top: 50.0),
                   child: GestureDetector(
-                    onTap: (){
-                      print('hahahaha');
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      Navigator.pushNamed(context, '/login');
                     },
                     child: Column(
                       children: <Widget>[
                         Image.asset("images/xiongmao.png", width: 65),
                         Container(
-                          child: Text(
-                              'hi~请登录',
-                              style: TextStyle(color: Colors.white, fontSize: 16.0)
-                          ),
-                          margin: EdgeInsets.only(top: 10.0),
+                          child: Text('hi~请登录',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 16.0)),
+                          padding: EdgeInsets.only(top: 10.0),
                         )
                       ],
                     ),
-                  )
-                ),
-              ),
-            ]
-          ),
-         Container(
-           child: Column(
-             children: <Widget>[
-               Container(
-                 padding: EdgeInsets.all(10),
-                 decoration: BoxDecoration(
-                     border: Border(
-                       bottom: Divider.createBorderSide(context, color: Colors.grey),
-                     )
-                 ),
-                 child: Flex(
-                   direction: Axis.horizontal,
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: <Widget>[
-                     Row(
-                       children: <Widget>[
-                         Image.asset("images/target.png", width: 30),
-                         Container(
-                           child: Text('建小目标'),
-                           margin: EdgeInsets.only(left: 10.0),
-                         )
-                       ],
-                     ),
-                     Icon(Icons.arrow_right, color: Colors.grey)
-                   ],
-                 )
-               ),
-               Container(
-                   padding: EdgeInsets.all(10),
-                   decoration: BoxDecoration(
-                       border: Border(
-                         bottom: Divider.createBorderSide(context, color: Colors.grey),
-                       )
-                   ),
-                   child: Flex(
-                     direction: Axis.horizontal,
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: <Widget>[
-                       Row(
-                         children: <Widget>[
-                           Image.asset("images/notebook.png", width: 30),
-                           Container(
-                             child: Text('记小本本'),
-                             margin: EdgeInsets.only(left: 10.0),
-                           )
-                         ],
-                       ),
-                       Icon(Icons.arrow_right, color: Colors.grey)
-                     ],
-                   )
-               ),
-               Container(
-                   padding: EdgeInsets.all(10),
-                   decoration: BoxDecoration(
-                       border: Border(
-                         bottom: Divider.createBorderSide(context, color: Colors.grey),
-                       )
-                   ),
-                   child: Flex(
-                     direction: Axis.horizontal,
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: <Widget>[
-                       Row(
-                         children: <Widget>[
-                           Image.asset("images/exit.png", width: 30),
-                           Container(
-                             child: Text('退出登录'),
-                             margin: EdgeInsets.only(left: 10.0),
-                           )
-                         ],
-                       ),
-                       Icon(Icons.arrow_right, color: Colors.grey)
-                     ],
-                   )
-               ),
-             ],
-           ),
-         )
-        ]
-    );
+                  )),
+            ),
+          ]),
+      Container(child: renderList())
+    ]);
   }
 }
