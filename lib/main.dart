@@ -5,37 +5,39 @@ import './views/objective/ObjectiveList.dart';
 import './views/mine/Mine.dart';
 import './views/login/Login.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   // 强制竖屏
   // If you're running an application and need to access the binary messenger before `runApp()` has been called (for example, during plugin initialization), then you need to explicitly call the `WidgetsFlutterBinding.ensureInitialized()` first.
-  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+  SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
-  ]).then((_) => runApp(MyApp()));
+  ]).then((_){
+    runApp(MyApp());
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      // 沉浸式透明
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        // 该属性仅用于 iOS 设备顶部状态栏亮度
+        statusBarBrightness: Brightness.light,
+        // 底部导航的设置
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarDividerColor: Colors.grey,
+        systemNavigationBarIconBrightness: Brightness.dark
+    ));
+  });
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        // 沉侵透明
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        // 该属性仅用于 iOS 设备顶部状态栏亮度
-        statusBarBrightness:
-            Platform.isAndroid ? Brightness.dark : Brightness.light,
-        // 底部导航的设置
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarDividerColor: Colors.grey,
-        systemNavigationBarIconBrightness: Brightness.dark));
     return MaterialApp(
       title: '懒得记',
-//      theme: ThemeData(
-//        primarySwatch: Colors.blue,
-//        platform: TargetPlatform.iOS,
-//      ),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+//        platform: TargetPlatform.iOS
+      ),
       home: MyHomePage(title: '懒得记'),
       routes: {'/login': (context) => LoginWidget()},
     );
@@ -67,10 +69,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title),
+//          brightness: Brightness.dark,
+          // Adaptive: android title is left
+          centerTitle: true),
       body: Center(child: _contentItems[_navSelectedIndex]),
       bottomNavigationBar: BottomNavigationBar(
           items: [
@@ -83,11 +87,11 @@ class _MyHomePageState extends State<MyHomePage> {
           fixedColor: Colors.blue,
           type: BottomNavigationBarType.fixed,
           onTap: _onNavClick),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addObjective,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: _addObjective,
+//        tooltip: '新增目标',
+//        child: Icon(Icons.add),
+//      ),
     );
   }
 }
