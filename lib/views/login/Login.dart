@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../utils/RequestUtil.dart';
+import '../../utils/HttpUtil.dart';
+import '../../utils/PromptUtil.dart';
 
 /// 登录模块
 class LoginWidget extends StatefulWidget {
@@ -11,18 +12,27 @@ class _LoginState extends State<LoginWidget> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String userName;
   String userPassword;
+  bool loginBtnStatus = false;
 
   // 请求登录
   void login() async {
     var loginForm = formKey.currentState;
     if (loginForm.validate()) {
       loginForm.save();
-      print('userName：' + userName + '，password：' + userPassword);
+      loginBtnStatus = true;
       try {
-        await RequestUtil.getInstance().post('/user/login',
+        var res = await Http.getInstance().post('/user/login',
             data: {'userName': userName, 'userPassword': userPassword});
+        if(res != null) {
+          PromptUtil.openToast('登录成功', bgColor: Colors.blue);
+          Navigator.pushNamed(context, '/');
+        }
       } catch (e) {
         print(e);
+      }finally {
+        setState(() {
+          loginBtnStatus = false;
+        });
       }
     }
   }
@@ -92,7 +102,7 @@ class _LoginState extends State<LoginWidget> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
                             textColor: Colors.white,
-                            onPressed: login,
+                            onPressed: !loginBtnStatus ? login : null,
                           ),
                         ),
                         Container(

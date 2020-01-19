@@ -14,7 +14,7 @@ class PromptUtil {
         toastLength: Toast.LENGTH_SHORT,
         gravity: gravity,
         timeInSecForIos: fadeTime,
-        backgroundColor: Colors.pink,
+        backgroundColor: bgColor,
         textColor: Colors.white,
         fontSize: 14.0);
   }
