@@ -6,17 +6,17 @@ import './views/mine/Mine.dart';
 import './views/login/Login.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // 强制竖屏
   // If you're running an application and need to access the binary messenger before `runApp()` has been called (for example, during plugin initialization), then you need to explicitly call the `WidgetsFlutterBinding.ensureInitialized()` first.
-  SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
-  ]).then((_){
+  ]).then((_) {
     runApp(MyApp());
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      // 沉浸式透明
+        // 沉浸式透明
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
         // 该属性仅用于 iOS 设备顶部状态栏亮度
@@ -24,8 +24,7 @@ void main() {
         // 底部导航的设置
         systemNavigationBarColor: Colors.white,
         systemNavigationBarDividerColor: Colors.grey,
-        systemNavigationBarIconBrightness: Brightness.dark
-    ));
+        systemNavigationBarIconBrightness: Brightness.dark));
   });
 }
 
@@ -60,6 +59,13 @@ class _MyHomePageState extends State<MyHomePage> {
   int _navSelectedIndex = 0;
   final _contentItems = [ObjectiveListWidget(), MineWidget()];
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print('Home render');
+  }
+
   void _addObjective() {}
 
   void _onNavClick(int index) {
@@ -90,11 +96,11 @@ class _MyHomePageState extends State<MyHomePage> {
           fixedColor: Colors.blue,
           type: BottomNavigationBarType.fixed,
           onTap: _onNavClick),
-//      floatingActionButton: FloatingActionButton(
-//        onPressed: _addObjective,
-//        tooltip: '新增目标',
-//        child: Icon(Icons.add),
-//      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addObjective,
+        tooltip: '新增目标',
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

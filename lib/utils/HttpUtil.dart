@@ -17,7 +17,6 @@ class Http {
     String platform = Platform.isAndroid ? 'android' : 'ios';
     dio.options.headers = {
       "version": "0.01",
-//      "Authorization": "Bearer " + ,
       "platform": platform
     };
     dio.options.baseUrl = "http://47.98.40.154:3000";
@@ -29,11 +28,13 @@ class Http {
         // 接口请求前数据处理，loading开关可以在这里做
         onRequest: (options) async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          print('onRequest');
-          options.headers["Authorization"] = "Bearer " + prefs.get('token');
+          if(prefs.get('token') != null) {
+            options.headers["Authorization"] = "Bearer " + prefs.get('token');
+          }
           // 全局单例, 所以你可以在任意一个地方自定义它的样式
           EasyLoading.instance..maskType = EasyLoadingMaskType.black;
           EasyLoading.show(status: '请求中...');
+          print('onRequest');
           return options;
         },
         // 接口成功返回时处理
@@ -81,10 +82,13 @@ class Http {
         } else {
           response = await dio.post(url);
         }
+        print('response');
         String dataStr = json.encode(response.data);
         var authHeader = response.headers['authorization'];
         if( authHeader != null && authHeader is List) {
-          prefs.setString('token', authHeader[0]);
+          if(authHeader[0] != null && authHeader[0] != prefs.get('token')) {
+            prefs.setString('token', authHeader[0]);
+          }
         }
         Map<String, dynamic> dataMap = json.decode(dataStr);
         if (dataMap['code'] == '000000') {
@@ -96,6 +100,8 @@ class Http {
         }
       }
     } on DioError catch (error) {
+      PromptUtil.openToast('系统未知异常');
+      print(error);
       Response errorResponse;
       if (error.response != null) {
         errorResponse = error.response;

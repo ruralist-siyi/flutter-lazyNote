@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/HttpUtil.dart';
 import '../../utils/PromptUtil.dart';
+import '../../models/index.dart';
 
 /// 登录模块
 class LoginWidget extends StatefulWidget {
@@ -21,11 +23,14 @@ class _LoginState extends State<LoginWidget> {
       loginForm.save();
       loginBtnStatus = true;
       try {
+        print('request');
         var res = await Http.getInstance().post('/user/login',
             data: {'userName': userName, 'userPassword': userPassword});
         if(res != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('userInfo', UserInfo.fromJson(res).toString());
           PromptUtil.openToast('登录成功', bgColor: Colors.blue);
-          Navigator.pushNamed(context, '/');
+          Navigator.of(context).pop(true);
         }
       } catch (e) {
         print(e);
