@@ -23,18 +23,17 @@ class _LoginState extends State<LoginWidget> {
       loginForm.save();
       loginBtnStatus = true;
       try {
-        print('request');
         var res = await Http.getInstance().post('/user/login',
             data: {'userName': userName, 'userPassword': userPassword});
-        if(res != null) {
+        if (res != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('userInfo', UserInfo.fromJson(res).toString());
+          prefs.setString('userInfo', UserInfoModel.fromJson(res).toString());
           PromptUtil.openToast('登录成功', bgColor: Colors.blue);
-          Navigator.of(context).pop(true);
+          Navigator.pushNamed(context, '/');
         }
       } catch (e) {
         print(e);
-      }finally {
+      } finally {
         setState(() {
           loginBtnStatus = false;
         });
@@ -51,9 +50,11 @@ class _LoginState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // WillPopScope: 返回事件拦截器 监听实体/虚拟返回键和AppBar返回键
     return WillPopScope(
       onWillPop: routePop,
       child: Scaffold(
+        // 是否调整主体的大小以避免键盘遮挡部分布局
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(title: Text('登录')),
         body: Center(
@@ -119,7 +120,9 @@ class _LoginState extends State<LoginWidget> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
                             textColor: Colors.black,
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/register');
+                            },
                           ),
                         ),
                       ],

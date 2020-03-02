@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'PromptUtil.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/responseModel.dart';
 
 Dio dio;
 
@@ -19,7 +20,7 @@ class Http {
       "version": "0.01",
       "platform": platform
     };
-    dio.options.baseUrl = "http://47.98.40.154:3000";
+    dio.options.baseUrl = "http://172.16.27.73:3000";
     dio.options.connectTimeout = 5000;
     dio.options.receiveTimeout = 3000;
     // TODO: 这里实际上是应该要做请求处理，后续根据实际情况添加，Dialog loading的话如果要依赖context需要特殊处理，可以通过overlay去实现
@@ -34,7 +35,6 @@ class Http {
           // 全局单例, 所以你可以在任意一个地方自定义它的样式
           EasyLoading.instance..maskType = EasyLoadingMaskType.black;
           EasyLoading.show(status: '请求中...');
-          print('onRequest');
           return options;
         },
         // 接口成功返回时处理
@@ -82,7 +82,6 @@ class Http {
         } else {
           response = await dio.post(url);
         }
-        print('response');
         String dataStr = json.encode(response.data);
         var authHeader = response.headers['authorization'];
         if( authHeader != null && authHeader is List) {
@@ -100,11 +99,15 @@ class Http {
         }
       }
     } on DioError catch (error) {
+      // TODO: 这里要注意处理异常情况
       PromptUtil.openToast('系统未知异常');
-      print(error);
       Response errorResponse;
       if (error.response != null) {
         errorResponse = error.response;
+//        print(errorResponse.data);
+//        print(errorResponse.data is Map);
+//        print(ResponseModel.fromJson(errorResponse.data));
+//        PromptUtil.openToast();
       } else {
         errorResponse = new Response(statusCode: 666);
         if (error.type == DioErrorType.CONNECT_TIMEOUT) {

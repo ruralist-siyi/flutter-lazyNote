@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import './views/objective/ObjectiveList.dart';
 import './views/mine/Mine.dart';
 import './views/login/Login.dart';
+import './views/register/Register.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() async {
@@ -40,7 +41,10 @@ class MyApp extends StatelessWidget {
 //        platform: TargetPlatform.iOS
         ),
         home: MyHomePage(title: '懒得记'),
-        routes: {'/login': (context) => LoginWidget()},
+        routes: {
+          '/login': (context) => LoginWidget(),
+          '/register': (context) => RegisterWidget()
+        },
       ),
     );
   }
@@ -63,7 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print('Home render');
   }
 
   void _addObjective() {}
