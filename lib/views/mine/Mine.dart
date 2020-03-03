@@ -45,6 +45,8 @@ class _MineState extends State<MineWidget> {
     await Http.getInstance().delete('/user/logout');
     Provider.of<GlobalProviderModel>(context, listen: false)
         .changeLoginStatus(false);
+    Provider.of<UserProviderModel>(context, listen: false)
+        .clear();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     Navigator.pushNamed(context, '/');

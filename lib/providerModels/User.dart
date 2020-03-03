@@ -25,4 +25,12 @@ class UserProviderModel extends ChangeNotifier {
     }
     refresh();
   }
+
+  clear() {
+    this.userId = null;
+    this.userName = null;
+    this.phone = null;
+    this.email = null;
+    refresh();
+  }
 }
