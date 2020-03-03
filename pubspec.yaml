@@ -32,6 +32,8 @@ dependencies:
   json_model: #latest version
   build_runner: ^1.0.0
   json_serializable: ^2.0.0
+  # 状态管理
+  provider: ^4.0.1
 
 dev_dependencies:
   flutter_test:

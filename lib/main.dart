@@ -1,13 +1,23 @@
-import 'dart:io';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import './views/objective/ObjectiveList.dart';
-import './views/mine/Mine.dart';
-import './views/login/Login.dart';
-import './views/register/Register.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import './views/login/Login.dart';
+import './views/mine/Mine.dart';
+import './views/objective/ObjectiveList.dart';
+import './views/register/Register.dart';
+import 'models/index.dart';
+import 'providerModels/index.dart';
+import 'utils/HttpUtil.dart';
 
 void main() async {
+  final userInfo = UserProviderModel();
+  final globalInfo = GlobalProviderModel();
+  final objectiveListInfo = ObjectiveProviderModel();
   WidgetsFlutterBinding.ensureInitialized();
   // 强制竖屏
   // If you're running an application and need to access the binary messenger before `runApp()` has been called (for example, during plugin initialization), then you need to explicitly call the `WidgetsFlutterBinding.ensureInitialized()` first.
@@ -15,7 +25,12 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]).then((_) {
-    runApp(MyApp());
+    runApp(MultiProvider(providers: [
+      ChangeNotifierProvider<UserProviderModel>.value(value: userInfo),
+      ChangeNotifierProvider<GlobalProviderModel>.value(value: globalInfo),
+      ChangeNotifierProvider<ObjectiveProviderModel>.value(
+          value: objectiveListInfo)
+    ], child: MyApp()));
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         // 沉浸式透明
         statusBarColor: Colors.transparent,
@@ -67,6 +82,26 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    fetchUserDetail();
+  }
+
+  // 请求用户详情数据
+  fetchUserDetail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.get('token');
+    if (token != null && prefs.get('userInfo') != null) {
+      final userInfo = json.decode(prefs.get('userInfo'));
+      UserInfoModel prefsUserInfo = UserInfoModel.fromJson(userInfo);
+      var userId = prefsUserInfo.userId;
+      Map<String, dynamic> params = {'userId': userId};
+      var res = await Http.getInstance().get('/user/queryDetail', data: params);
+      var result = UserInfoModel.fromJson(res);
+      Provider.of<UserProviderModel>(context, listen: false).setUserData(
+          userName: result.userName,
+          userId: result.userId,
+          phone: result.phone,
+          email: result.email);
+    }
   }
 
   void _addObjective() {}

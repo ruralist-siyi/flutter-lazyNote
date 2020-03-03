@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../utils/PromptUtil.dart';
+
 import '../../utils/HttpUtil.dart';
+import '../../utils/PromptUtil.dart';
 
 class RegisterWidget extends StatefulWidget {
   @override
@@ -25,8 +25,12 @@ class RegisterState extends State<RegisterWidget> {
       loginForm.save();
       registerBtnStatus = true;
       try {
-        var res = await Http.getInstance().post('/user/create',
-            data: {'userName': userName, 'userPassword': userPassword, 'email': email, 'phone': phone});
+        var res = await Http.getInstance().post('/user/create', data: {
+          'userName': userName,
+          'userPassword': userPassword,
+          'email': email,
+          'phone': phone
+        });
         if (res != null) {
           PromptUtil.openToast('注册成功去登陆！', bgColor: Colors.blue);
           Navigator.pushNamed(context, '/login');
@@ -55,7 +59,6 @@ class RegisterState extends State<RegisterWidget> {
       onWillPop: routePop,
       child: Scaffold(
           appBar: AppBar(title: Text('注册')),
-          resizeToAvoidBottomPadding: true,
           body: SingleChildScrollView(
             child: Center(
               child: Container(
@@ -96,7 +99,8 @@ class RegisterState extends State<RegisterWidget> {
                       TextFormField(
                         decoration: InputDecoration(hintText: '邮箱'),
                         validator: (value) {
-                          final emailReg = new RegExp('^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}\$');
+                          final emailReg = new RegExp(
+                              '^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}\$');
                           if (value != '' && !emailReg.hasMatch(value)) {
                             return '请输入正确格式的邮箱地址';
                           } else {
@@ -131,7 +135,7 @@ class RegisterState extends State<RegisterWidget> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0)),
                           textColor: Colors.white,
-                          onPressed: register,
+                          onPressed: !registerBtnStatus ? register : null,
                         ),
                       ),
                     ],
@@ -139,8 +143,7 @@ class RegisterState extends State<RegisterWidget> {
                 ),
               ),
             ),
-          )
-      ),
+          )),
     );
   }
 }

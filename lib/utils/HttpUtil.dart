@@ -1,10 +1,13 @@
-import 'package:dio/dio.dart';
-import 'dart:io';
 import 'dart:convert';
-import 'PromptUtil.dart';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:flutter_app/providerModels/Global.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/responseModel.dart';
+
+import '../providerModels/index.dart';
+import 'PromptUtil.dart';
 
 Dio dio;
 
@@ -16,10 +19,7 @@ class Http {
     dio = new Dio();
 
     String platform = Platform.isAndroid ? 'android' : 'ios';
-    dio.options.headers = {
-      "version": "0.01",
-      "platform": platform
-    };
+    dio.options.headers = {"version": "0.01", "platform": platform};
     dio.options.baseUrl = "http://172.16.27.73:3000";
     dio.options.connectTimeout = 5000;
     dio.options.receiveTimeout = 3000;
@@ -29,7 +29,7 @@ class Http {
         // 接口请求前数据处理，loading开关可以在这里做
         onRequest: (options) async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          if(prefs.get('token') != null) {
+          if (prefs.get('token') != null) {
             options.headers["Authorization"] = "Bearer " + prefs.get('token');
           }
           // 全局单例, 所以你可以在任意一个地方自定义它的样式
@@ -58,8 +58,43 @@ class Http {
     return _instance;
   }
 
+  handleResponse(response) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String dataStr = json.encode(response.data);
+    var authHeader = response.headers['authorization'];
+    if (authHeader != null && authHeader is List) {
+      if (authHeader[0] != null && authHeader[0] != prefs.get('token')) {
+        prefs.setString('token', authHeader[0]);
+      }
+    }
+    Map<String, dynamic> dataMap = json.decode(dataStr);
+    if (dataMap['code'] == '000000') {
+      return dataMap['data'];
+    } else {
+      // token过期未授权处理逻辑
+      if (dataMap['code'] == '000003') {
+        final globalModel = GlobalProviderModel();
+        globalModel.changeLoginStatus(false);
+        prefs.clear();
+      }
+      PromptUtil.openToast((dataMap['msg'] != null && dataMap['msg'] != '')
+          ? dataMap['msg']
+          : '请求异常');
+    }
+  }
+
   post(String url, {Map data, Function onSuccess, Function onError}) {
     return _request(url, data: data, onSuccess: onSuccess, onError: onError);
+  }
+
+  get(String url, {Map data, Function onSuccess, Function onError}) {
+    return _request(url,
+        method: 'GET', data: data, onSuccess: onSuccess, onError: onError);
+  }
+
+  delete(String url, {Map data, Function onSuccess, Function onError}) {
+    return _request(url,
+        method: 'DELETE', data: data, onSuccess: onSuccess, onError: onError);
   }
 
   _request(String url,
@@ -67,7 +102,6 @@ class Http {
       Map data,
       Function onSuccess,
       Function onError}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     Response response;
     try {
       if (method == 'GET') {
@@ -82,31 +116,18 @@ class Http {
         } else {
           response = await dio.post(url);
         }
-        String dataStr = json.encode(response.data);
-        var authHeader = response.headers['authorization'];
-        if( authHeader != null && authHeader is List) {
-          if(authHeader[0] != null && authHeader[0] != prefs.get('token')) {
-            prefs.setString('token', authHeader[0]);
-          }
-        }
-        Map<String, dynamic> dataMap = json.decode(dataStr);
-        if (dataMap['code'] == '000000') {
-          return dataMap['data'];
-        } else {
-          PromptUtil.openToast((dataMap['msg'] != null && dataMap['msg'] != '')
-              ? dataMap['msg']
-              : '请求异常');
-        }
+      } else if (method == 'DELETE') {
+        response = await dio.delete(url);
       }
+      return await handleResponse(response);
     } on DioError catch (error) {
       // TODO: 这里要注意处理异常情况
-      PromptUtil.openToast('系统未知异常');
       Response errorResponse;
+      print('errorResponse');
+      print(errorResponse);
+      PromptUtil.openToast('系统未知异常');
       if (error.response != null) {
         errorResponse = error.response;
-//        print(errorResponse.data);
-//        print(errorResponse.data is Map);
-//        print(ResponseModel.fromJson(errorResponse.data));
 //        PromptUtil.openToast();
       } else {
         errorResponse = new Response(statusCode: 666);

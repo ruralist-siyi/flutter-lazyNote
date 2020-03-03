@@ -1,16 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/index.dart';
+import '../../providerModels/index.dart';
 import '../../utils/HttpUtil.dart';
 import '../../utils/PromptUtil.dart';
-import '../../models/index.dart';
 
 /// 登录模块
 class LoginWidget extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  LoginState createState() => LoginState();
 }
 
-class _LoginState extends State<LoginWidget> {
+class LoginState extends State<LoginWidget> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String userName;
   String userPassword;
@@ -27,7 +32,15 @@ class _LoginState extends State<LoginWidget> {
             data: {'userName': userName, 'userPassword': userPassword});
         if (res != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('userInfo', UserInfoModel.fromJson(res).toString());
+          var result = UserInfoModel.fromJson(res);
+          prefs.setString('userInfo', json.encode(res));
+          Provider.of<UserProviderModel>(context, listen: false).setUserData(
+              userName: result.userName,
+              userId: result.userId,
+              phone: result.phone,
+              email: result.email);
+          Provider.of<GlobalProviderModel>(context, listen: false)
+              .changeLoginStatus(true);
           PromptUtil.openToast('登录成功', bgColor: Colors.blue);
           Navigator.pushNamed(context, '/');
         }
