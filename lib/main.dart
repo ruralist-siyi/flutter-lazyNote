@@ -13,6 +13,7 @@ import './views/register/Register.dart';
 import 'models/index.dart';
 import 'providerModels/index.dart';
 import 'utils/HttpUtil.dart';
+import 'utils/FadeRoute.dart';
 
 void main() async {
   final userInfo = UserProviderModel();
@@ -59,6 +60,15 @@ class MyApp extends StatelessWidget {
         routes: {
           '/login': (context) => LoginWidget(),
           '/register': (context) => RegisterWidget()
+        },
+        // route change animation
+        onGenerateRoute: (setting) {
+          switch (setting.name) {
+            case '/addObjective':
+              return FadeRoute(LoginWidget());
+            default:
+              return null;
+          }
         },
       ),
     );

@@ -9,10 +9,10 @@ import '../../utils/PromptUtil.dart';
 /// 个人中心模块
 class MineWidget extends StatefulWidget {
   @override
-  _MineState createState() => _MineState();
+  MineState createState() => MineState();
 }
 
-class _MineState extends State<MineWidget> {
+class MineState extends State<MineWidget> {
   List listItem;
 
   @override
@@ -24,13 +24,13 @@ class _MineState extends State<MineWidget> {
         "icon": "images/target.png",
         "title": "建小目标",
         'key': 'addObjective',
-        'method': null
+        'method': goAddObjective
       },
       {
         "icon": "images/notebook.png",
         "title": "记小本本",
         'key': 'writeNote',
-        'method': null
+        'method': goWriteNote
       },
       {
         "icon": "images/exit.png",
@@ -41,12 +41,20 @@ class _MineState extends State<MineWidget> {
     ];
   }
 
+  goWriteNote() {
+    PromptUtil.openToast('功能正在开发中...',
+        bgColor: Colors.white, textColor: Colors.black, fadeTime: 1);
+  }
+
+  goAddObjective() {
+    Navigator.pushNamed(context, '/addObjective');
+  }
+
   logout() async {
     await Http.getInstance().delete('/user/logout');
     Provider.of<GlobalProviderModel>(context, listen: false)
         .changeLoginStatus(false);
-    Provider.of<UserProviderModel>(context, listen: false)
-        .clear();
+    Provider.of<UserProviderModel>(context, listen: false).clear();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     Navigator.pushNamed(context, '/');
@@ -54,12 +62,18 @@ class _MineState extends State<MineWidget> {
   }
 
   exit() async {
+    if (!Provider.of<GlobalProviderModel>(context, listen: false).isLogin) {
+      PromptUtil.openToast('您还未登录...',
+          bgColor: Colors.white, textColor: Colors.black, fadeTime: 1);
+      return;
+    }
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('退出登录'),
+          elevation: 2,
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -117,8 +131,6 @@ class _MineState extends State<MineWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final userInfo = Provider.of<UserProviderModel>(context);
-    final globalInfo = Provider.of<GlobalProviderModel>(context);
     // TODO: implement build
     return Column(children: [
       Flex(
@@ -126,32 +138,35 @@ class _MineState extends State<MineWidget> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Expanded(
-              child: Container(
-                  color: Colors.blue,
-                  height: 200,
-                  padding: EdgeInsets.only(top: 50.0),
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: !globalInfo.isLogin
-                        ? () {
-                            Navigator.pushNamed(context, '/login');
-                          }
-                        : null,
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset("images/xiongmao.png", width: 65),
-                        Container(
-                          child: Text(
-                              userInfo.userName != null
-                                  ? userInfo.userName
-                                  : 'hi~请登录',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 16.0)),
-                          padding: EdgeInsets.only(top: 10.0),
-                        )
-                      ],
-                    ),
-                  )),
+              child: Consumer2<GlobalProviderModel, UserProviderModel>(
+                  builder: (context, GlobalProviderModel globalInfo,
+                          UserProviderModel userInfo, _) =>
+                      Container(
+                          color: Colors.blue,
+                          height: 200,
+                          padding: EdgeInsets.only(top: 50.0),
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: !globalInfo.isLogin
+                                ? () {
+                                    Navigator.pushNamed(context, '/login');
+                                  }
+                                : null,
+                            child: Column(
+                              children: <Widget>[
+                                Image.asset("images/xiongmao.png", width: 65),
+                                Container(
+                                  child: Text(
+                                      userInfo.userName != null && globalInfo.isLogin
+                                          ? userInfo.userName
+                                          : 'hi~请登录',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16.0)),
+                                  padding: EdgeInsets.only(top: 10.0),
+                                )
+                              ],
+                            ),
+                          ))),
             ),
           ]),
       Container(child: renderList())

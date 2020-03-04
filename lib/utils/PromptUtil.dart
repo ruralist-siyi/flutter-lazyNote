@@ -15,7 +15,7 @@ class PromptUtil {
         gravity: gravity,
         timeInSecForIos: fadeTime,
         backgroundColor: bgColor,
-        textColor: Colors.white,
+        textColor: textColor,
         fontSize: 14.0);
   }
 }
