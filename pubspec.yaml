@@ -24,16 +24,27 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
-  # http request
+  # 网络请求
   dio: ^3.0.7
+  # toast提示
   fluttertoast: ^3.1.3
+  # 持久化数据
   shared_preferences: ^0.5.1
+  # loading组件
   flutter_easyloading: ^1.1.0
+  # models生成
   json_model: #latest version
   build_runner: ^1.0.0
+  # json转换
   json_serializable: ^2.0.0
   # 状态管理
   provider: ^4.0.1
+  # 下拉刷新上拉加载
+  flutter_easyrefresh: ^2.0.9
+  # 侧滑
+  flutter_slidable: ^0.5.4
+  # 日期等等各种工具方法集合
+  flustars: ^0.2.6+1
 
 dev_dependencies:
   flutter_test:
@@ -86,3 +97,6 @@ flutter:
     - images/target.png
     - images/notebook.png
     - images/exit.png
+    - images/top-lindang.png
+    - images/lindang-colorful.png
+    - images/no-content.jpg

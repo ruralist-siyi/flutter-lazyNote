@@ -32,9 +32,7 @@ class Http {
           if (prefs.get('token') != null) {
             options.headers["Authorization"] = "Bearer " + prefs.get('token');
           }
-          // 全局单例, 所以你可以在任意一个地方自定义它的样式
-          EasyLoading.instance..maskType = EasyLoadingMaskType.black;
-          EasyLoading.show(status: '请求中...');
+          print(options);
           return options;
         },
         // 接口成功返回时处理
@@ -83,27 +81,33 @@ class Http {
     }
   }
 
-  post(String url, {Map data, Function onSuccess, Function onError}) {
-    return _request(url, data: data, onSuccess: onSuccess, onError: onError);
+  post(String url, {Map data, Function onSuccess, Function onError, bool loading = true}) {
+    return _request(url, data: data, onSuccess: onSuccess, onError: onError,loading: loading);
   }
 
-  get(String url, {Map data, Function onSuccess, Function onError}) {
+  get(String url, {Map data, Function onSuccess, Function onError, bool loading = true}) {
     return _request(url,
-        method: 'GET', data: data, onSuccess: onSuccess, onError: onError);
+        method: 'GET', data: data, onSuccess: onSuccess, onError: onError,loading: loading);
   }
 
-  delete(String url, {Map data, Function onSuccess, Function onError}) {
+  delete(String url, {Map data, Function onSuccess, Function onError, bool loading = true}) {
     return _request(url,
-        method: 'DELETE', data: data, onSuccess: onSuccess, onError: onError);
+        method: 'DELETE', data: data, onSuccess: onSuccess, onError: onError, loading: loading);
   }
 
   _request(String url,
       {String method = 'POST',
       Map data,
       Function onSuccess,
-      Function onError}) async {
+      Function onError,
+      bool loading}) async {
     Response response;
     try {
+      if(loading) {
+        // 全局单例, 所以你可以在任意一个地方自定义它的样式
+        EasyLoading.instance..maskType = EasyLoadingMaskType.black;
+        EasyLoading.show(status: '请求中...');
+      }
       if (method == 'GET') {
         if (data != null && data.isNotEmpty) {
           response = await dio.get(url, queryParameters: data);
@@ -117,7 +121,11 @@ class Http {
           response = await dio.post(url);
         }
       } else if (method == 'DELETE') {
-        response = await dio.delete(url);
+        if (data != null && data.isNotEmpty) {
+          response = await dio.delete(url, data: data);
+        } else {
+          response = await dio.delete(url);
+        }
       }
       return await handleResponse(response);
     } on DioError catch (error) {
