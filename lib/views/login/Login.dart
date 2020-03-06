@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/index.dart';
-import '../../providerModels/index.dart';
+import '../../provider/index.dart';
 import '../../utils/HttpUtil.dart';
 import '../../utils/PromptUtil.dart';
 
@@ -23,6 +23,7 @@ class LoginState extends State<LoginWidget> {
 
   // 请求登录
   void login() async {
+    FocusScope.of(context).requestFocus(FocusNode());
     var loginForm = formKey.currentState;
     if (loginForm.validate()) {
       loginForm.save();
@@ -79,7 +80,7 @@ class LoginState extends State<LoginWidget> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  decoration: InputDecoration(hintText: '用户名'),
+                  decoration: InputDecoration(labelText: '用户名',hintText: '请输入用户名'),
                   validator: (value) {
                     // 校验
                     if (value?.length < 3) {
@@ -93,7 +94,7 @@ class LoginState extends State<LoginWidget> {
                   },
                 ),
                 TextFormField(
-                    decoration: InputDecoration(hintText: '密码'),
+                    decoration: InputDecoration(labelText: '密码',hintText: '请输入密码'),
                     obscureText: true,
                     validator: (value) {
                       if (value?.length < 6) {

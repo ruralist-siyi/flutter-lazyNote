@@ -45,6 +45,8 @@ dependencies:
   flutter_slidable: ^0.5.4
   # 日期等等各种工具方法集合
   flustars: ^0.2.6+1
+  # star rating
+  flutter_rating_bar: ^3.0.1+1
 
 dev_dependencies:
   flutter_test:

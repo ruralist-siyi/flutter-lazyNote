@@ -8,12 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import './views/login/Login.dart';
 import './views/mine/Mine.dart';
+import './views/objective/AddObjective.dart';
 import './views/objective/ObjectiveList.dart';
 import './views/register/Register.dart';
 import 'models/index.dart';
-import 'providerModels/index.dart';
-import 'utils/HttpUtil.dart';
+import 'provider/index.dart';
 import 'utils/FadeRoute.dart';
+import 'utils/HttpUtil.dart';
+import 'utils/PromptUtil.dart';
 
 void main() async {
   final userInfo = UserProviderModel();
@@ -65,7 +67,7 @@ class MyApp extends StatelessWidget {
         onGenerateRoute: (setting) {
           switch (setting.name) {
             case '/addObjective':
-              return FadeRoute(LoginWidget());
+              return FadeRoute(AddObjective());
             default:
               return null;
           }
@@ -114,7 +116,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _addObjective() {}
+  void _addObjective() {
+    if (!Provider.of<GlobalProviderModel>(context, listen: false).isLogin) {
+      PromptUtil.openToast('您还未登录...',
+          bgColor: Colors.white, textColor: Colors.black, fadeTime: 1);
+      return;
+    }
+    Navigator.pushNamed(context, '/addObjective');
+  }
 
   void _onNavClick(int index) {
     setState(() {

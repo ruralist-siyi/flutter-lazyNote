@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../providerModels/index.dart';
+import '../../provider/index.dart';
 import '../../utils/HttpUtil.dart';
 import '../../utils/PromptUtil.dart';
 
@@ -47,6 +47,11 @@ class MineState extends State<MineWidget> {
   }
 
   goAddObjective() {
+    if (!Provider.of<GlobalProviderModel>(context, listen: false).isLogin) {
+      PromptUtil.openToast('您还未登录...',
+          bgColor: Colors.white, textColor: Colors.black, fadeTime: 1);
+      return;
+    }
     Navigator.pushNamed(context, '/addObjective');
   }
 

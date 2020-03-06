@@ -9,8 +9,9 @@ import '../../utils/PromptUtil.dart';
 class ObjectiveItem extends StatelessWidget {
   final Map<String, dynamic> data;
   final num index;
+  final fetchObjectiveList;
 
-  ObjectiveItem(this.data, this.index);
+  ObjectiveItem(this.data, this.index, this.fetchObjectiveList);
 
   // 删除目标
   deleteObjective(context) async {
@@ -18,6 +19,7 @@ class ObjectiveItem extends StatelessWidget {
     await Http.getInstance()
         .delete('/objective/delete', data: params, loading: true);
     PromptUtil.openToast('删除成功！', bgColor: Colors.blue);
+    this.fetchObjectiveList();
     Navigator.pop(context);
   }
 
@@ -56,6 +58,15 @@ class ObjectiveItem extends StatelessWidget {
     );
   }
 
+  // 目标置顶
+  setObjectiveTop(context) async {
+    Map<String, dynamic> params = {'objectiveId': this.data['objectiveId']};
+    await Http.getInstance()
+        .post('/objective/setTop', data: params, loading: true);
+    PromptUtil.openToast('置顶成功！', bgColor: Colors.blue);
+    this.fetchObjectiveList();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -70,10 +81,14 @@ class ObjectiveItem extends StatelessWidget {
       actionPane: SlidableDrawerActionPane(),
       secondaryActions: <Widget>[
         IconSlideAction(
-          caption: '置顶',
-          color: Colors.blue,
-          icon: Icons.notifications,
-        ),
+            caption: '置顶',
+            color: isTop ? Colors.grey : Colors.blue,
+            icon: Icons.notifications,
+            onTap: () {
+              if (!isTop) {
+                setObjectiveTop(context);
+              }
+            }),
         IconSlideAction(
           caption: '删除',
           color: Colors.red,

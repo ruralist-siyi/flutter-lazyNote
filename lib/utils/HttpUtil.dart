@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_app/providerModels/Global.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../providerModels/index.dart';
+import '../provider/index.dart';
 import 'PromptUtil.dart';
 
 Dio dio;
@@ -32,7 +31,6 @@ class Http {
           if (prefs.get('token') != null) {
             options.headers["Authorization"] = "Bearer " + prefs.get('token');
           }
-          print(options);
           return options;
         },
         // 接口成功返回时处理
@@ -63,6 +61,7 @@ class Http {
     if (authHeader != null && authHeader is List) {
       if (authHeader[0] != null && authHeader[0] != prefs.get('token')) {
         prefs.setString('token', authHeader[0]);
+        _instance = Http();
       }
     }
     Map<String, dynamic> dataMap = json.decode(dataStr);
@@ -78,6 +77,7 @@ class Http {
       PromptUtil.openToast((dataMap['msg'] != null && dataMap['msg'] != '')
           ? dataMap['msg']
           : '请求异常');
+      throw Exception('Error on request');
     }
   }
 
@@ -131,13 +131,19 @@ class Http {
     } on DioError catch (error) {
       // TODO: 这里要注意处理异常情况
       Response errorResponse;
-      print('errorResponse');
-      print(errorResponse);
-      PromptUtil.openToast('系统未知异常');
       if (error.response != null) {
         errorResponse = error.response;
-//        PromptUtil.openToast();
+        if(errorResponse.statusCode == 401) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          final globalModel = GlobalProviderModel();
+          globalModel.changeLoginStatus(false);
+          prefs.clear();
+          PromptUtil.openToast('登录状态过期请重新登录');
+        }else {
+          PromptUtil.openToast('系统未知异常');
+        }
       } else {
+        PromptUtil.openToast('系统未知异常');
         errorResponse = new Response(statusCode: 666);
         if (error.type == DioErrorType.CONNECT_TIMEOUT) {
 //          errorResponse.statusCode = ResultCode.CONNECT_TIMEOUT;
@@ -147,6 +153,7 @@ class Http {
 //          errorResponse.statusCode = ResultCode.RECEIVE_TIMEOUT;
         }
       }
+      throw Exception('Error on request');
     }
   }
 }

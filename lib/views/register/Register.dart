@@ -70,7 +70,7 @@ class RegisterState extends State<RegisterWidget> {
                     children: <Widget>[
                       TextFormField(
                         keyboardType: TextInputType.text,
-                        decoration: InputDecoration(hintText: '用户名'),
+                        decoration: InputDecoration(labelText: '用户名',hintText: '用户名'),
                         validator: (value) {
                           if (value?.length < 3) {
                             return '用户名必须大于等于 3 个字符';
@@ -83,7 +83,7 @@ class RegisterState extends State<RegisterWidget> {
                         },
                       ),
                       TextFormField(
-                          decoration: InputDecoration(hintText: '密码'),
+                          decoration: InputDecoration(labelText: '密码',hintText: '请输入密码'),
                           obscureText: true,
                           validator: (value) {
                             if (value?.length < 6) {
@@ -97,7 +97,7 @@ class RegisterState extends State<RegisterWidget> {
                             userPassword = value;
                           }),
                       TextFormField(
-                        decoration: InputDecoration(hintText: '邮箱'),
+                        decoration: InputDecoration(labelText: '邮箱',hintText: '请输入邮箱'),
                         validator: (value) {
                           final emailReg = new RegExp(
                               '^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}\$');
@@ -112,7 +112,7 @@ class RegisterState extends State<RegisterWidget> {
                         },
                       ),
                       TextFormField(
-                        decoration: InputDecoration(hintText: '手机号'),
+                        decoration: InputDecoration(labelText: '手机号',hintText: '请输入手机号'),
                         validator: (value) {
                           final phoneReg = new RegExp('^[1][0-9]{10}\$');
                           if (value != '' && !phoneReg.hasMatch(value)) {
