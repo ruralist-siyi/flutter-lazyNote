@@ -38,6 +38,7 @@ class AddObjectiveState extends State<AddObjective> {
   // datePicker 操作
   Future<DateTime> getDate(context) {
     return showDatePicker(
+      locale: Locale('zh'),
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),

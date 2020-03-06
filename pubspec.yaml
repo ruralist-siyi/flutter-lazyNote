@@ -17,6 +17,9 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  # 国际化
+  flutter_localizations:
+    sdk: flutter
   flutter:
     sdk: flutter
 

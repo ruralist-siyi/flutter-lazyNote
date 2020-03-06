@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import './views/login/Login.dart';
 import './views/mine/Mine.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
     return FlutterEasyLoading(
       child: MaterialApp(
         title: '懒得记',
+        locale: Locale('zh'),
         theme: ThemeData(
           primarySwatch: Colors.blue,
 //        platform: TargetPlatform.iOS
@@ -72,6 +74,14 @@ class MyApp extends StatelessWidget {
               return null;
           }
         },
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('en', 'US'),
+          const Locale('zh', 'CH')
+        ],
       ),
     );
   }
