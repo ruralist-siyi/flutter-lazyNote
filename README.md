@@ -1,4 +1,4 @@
-## Flutter LazyNote（flutter技术栈实现"懒得记"App）
+## Flutter LazyNote（flutter技术栈实现"懒得记"App:[安卓去下载apk](https://github.com/ruralist-siyi/flutter-lazyNote/releases/tag/v1.0))
 ### 一、这是为了学习Flutter技术，产出的一个App。通过这个项目你可以学到以下内容：
 - **学习Flutter的声明式UI基本布局（Row、Col、Container、Flex等基本Widget的使用）**
 - **Dart基本语法（数据类型、函数操作、类等基本用法的学习）**
