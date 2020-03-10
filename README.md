@@ -10,9 +10,19 @@
 - **通过第三方库实现下拉刷新、上拉加载以及侧滑操作等常见UI**
 - **DatePicker组件的国际化配置（配置中文展示）**
 - **安卓开屏页以及打包.apk**
+- **路由定义跳转以及路由切换动画**
+
+
 
 ### 二、项目配套的后台使用的是Node.js的Koa2框架代码仓库如下：
 **[koa2-mysql-sequelize-JWT](https://github.com/ruralist-siyi/koa2-mysql-sequelize-JWT)**
 
+
+
 ### 三、项目演示：
- <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif1.gif" width="200" height="500"/> <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif2.gif" width="200" height="500" style="margin-left: 30px;"/>
+ <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif1.gif" width="250" height="520"/> <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif2.gif" width="250" height="520" style="margin-left: 30px;"/>
+
+
+
+### 四、提示：
+这是一个学习Flutter的项目，可能存在或多或少的不足，代码供大家学习参考，如果有代码建议以及共同学习交流请email: dajiadoujiaowosiyi@163.com。
