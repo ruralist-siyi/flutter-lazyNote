@@ -1,16 +1,14 @@
-# flutter_app
+## Flutter LazyNote（flutter技术栈实现"懒得记"App）
+### 这是为了学习Flutter技术，产出的一个App。通过这个项目你可以学到以下内容：
+1. 学习Flutter的声明式UI基本布局（Row、Col、Container、Flex等基本Widget的使用）
+2. Dart基本语法（数据类型、函数操作、类等基本用法的学习）
+3. 实践StatefulWidget以及StatelessWidget，实践得出二者区别以及生命周期的应用
+4. Flutter中使用Dio进行request方法封装进行数据请求
+5. 通过json_model库进行数据model的定义，增加我们数据处理以及获取的代码健壮性
+6. 通过Provider库进行状态管理，更好的进行全局以及局部的父子状态传递通信
+7. 通过shared_preferences进行本地数据持久化，将token等数据进行存储
+8. 通过第三方库实现下拉刷新、上拉加载以及侧滑操作等常见UI
+9. DatePicker组件的国际化配置（配置中文展示）
 
-A new Flutter application.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 项目配套的后台使用的是Node.js的Koa2框架代码仓库如下：
+![koa2-mysql-sequelize-JWT](https://github.com/ruralist-siyi/koa2-mysql-sequelize-JWT)
