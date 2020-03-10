@@ -20,7 +20,7 @@
 
 
 ### 三、项目演示：
- <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif1.gif" width="250" height="520"/> <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif2.gif" width="250" height="520" style="margin-left: 30px;"/>
+ <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif1.gif" width="250" height="520"/> <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif2.gif" width="250" height="520" style="margin-left: 50px;"/>
 
 
 
