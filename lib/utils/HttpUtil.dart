@@ -19,7 +19,7 @@ class Http {
 
     String platform = Platform.isAndroid ? 'android' : 'ios';
     dio.options.headers = {"version": "0.01", "platform": platform};
-    dio.options.baseUrl = "http://172.16.27.73:3000";
+    dio.options.baseUrl = "http://47.98.40.154:3000";
     dio.options.connectTimeout = 5000;
     dio.options.receiveTimeout = 3000;
     // TODO: 这里实际上是应该要做请求处理，后续根据实际情况添加，Dialog loading的话如果要依赖context需要特殊处理，可以通过overlay去实现
@@ -143,14 +143,12 @@ class Http {
           PromptUtil.openToast('系统未知异常');
         }
       } else {
-        PromptUtil.openToast('系统未知异常');
         errorResponse = new Response(statusCode: 666);
         if (error.type == DioErrorType.CONNECT_TIMEOUT) {
-//          errorResponse.statusCode = ResultCode.CONNECT_TIMEOUT;
+          PromptUtil.openToast('请求连接超时');
         }
-        // 一般服务器错误
-        else if (error.type == DioErrorType.RECEIVE_TIMEOUT) {
-//          errorResponse.statusCode = ResultCode.RECEIVE_TIMEOUT;
+        else {
+          PromptUtil.openToast('系统未知异常');
         }
       }
       throw Exception('Error on request');

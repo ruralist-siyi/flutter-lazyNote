@@ -76,6 +76,7 @@ class AddObjectiveState extends State<AddObjective> {
       await Http.getInstance()
           .post('/objective/create', data: params, loading: true);
       PromptUtil.openToast('新增成功！', bgColor: Colors.blue);
+      Navigator.pushNamed(context, '/');
     } on Exception catch (_) {
       print('addObjective request error');
     }

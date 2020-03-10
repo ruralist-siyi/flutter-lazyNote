@@ -19,6 +19,7 @@ class RegisterState extends State<RegisterWidget> {
   String phone;
   bool registerBtnStatus = false;
 
+  // 去注册
   void register() async {
     var loginForm = formKey.currentState;
     if (loginForm.validate()) {

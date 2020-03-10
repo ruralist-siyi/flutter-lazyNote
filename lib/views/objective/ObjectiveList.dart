@@ -29,8 +29,7 @@ class _ObjectiveListState extends State<ObjectiveListWidget> {
   fetchObjectiveList() async {
     Map<String, dynamic> params = {'page': 1, 'size': 10};
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isLogin = Provider.of<GlobalProviderModel>(context, listen: false).isLogin;
-    if (prefs.get('token') != null && isLogin) {
+    if (prefs.get('token') != null) {
       var res = await Http.getInstance()
           .get('/objective/queryForPage', data: params, loading: false);
       if (res != null) {
@@ -68,7 +67,7 @@ class _ObjectiveListState extends State<ObjectiveListWidget> {
   Widget build(BuildContext context) {
     // TODO: implement build
     final objectiveData = Provider.of<ObjectiveProviderModel>(context);
-    bool isLogin = Provider.of<GlobalProviderModel>(context, listen: false).isLogin;
+    bool isLogin = Provider.of<GlobalProviderModel>(context, listen: true).isLogin;
     bool isNoContentVisible = objectiveData.objectiveList.length > 0 && isLogin;
     print(objectiveData.totalCount);
     return isNoContentVisible ? Container(

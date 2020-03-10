@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import './views/login/Login.dart';
 import './views/mine/Mine.dart';
@@ -78,10 +78,7 @@ class MyApp extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate
         ],
-        supportedLocales: [
-          const Locale('en', 'US'),
-          const Locale('zh', 'CH')
-        ],
+        supportedLocales: [const Locale('en', 'US'), const Locale('zh', 'CH')],
       ),
     );
   }
@@ -96,7 +93,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   int _navSelectedIndex = 0;
   final _contentItems = [ObjectiveListWidget(), MineWidget()];
 
@@ -104,7 +101,32 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance.addObserver(this); // 注册监听器
     fetchUserDetail();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // 移除监听器
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        print(AppLifecycleState.resumed);
+        break;
+      case AppLifecycleState.inactive:
+        print(AppLifecycleState.inactive);
+        break;
+      case AppLifecycleState.paused:
+        print(AppLifecycleState.paused);
+        break;
+      default:
+        break;
+    }
   }
 
   // 请求用户详情数据
@@ -116,17 +138,25 @@ class _MyHomePageState extends State<MyHomePage> {
       UserInfoModel prefsUserInfo = UserInfoModel.fromJson(userInfo);
       var userId = prefsUserInfo.userId;
       Map<String, dynamic> params = {'userId': userId};
-      var res = await Http.getInstance().get('/user/queryDetail', data: params);
-      var result = UserInfoModel.fromJson(res);
-      Provider.of<UserProviderModel>(context, listen: false).setUserData(
-          userName: result.userName,
-          userId: result.userId,
-          phone: result.phone,
-          email: result.email);
+      try {
+        var res =
+            await Http.getInstance().get('/user/queryDetail', data: params);
+        var result = UserInfoModel.fromJson(res);
+        Provider.of<GlobalProviderModel>(context, listen: false)
+            .changeLoginStatus(true);
+        Provider.of<UserProviderModel>(context, listen: false).setUserData(
+            userName: result.userName,
+            userId: result.userId,
+            phone: result.phone,
+            email: result.email);
+      } on Exception catch (_) {
+        print('fetchUserDetail request error');
+      }
     }
   }
 
-  void _addObjective() {
+  // 新增小目标
+  void addObjective() {
     if (!Provider.of<GlobalProviderModel>(context, listen: false).isLogin) {
       PromptUtil.openToast('您还未登录...',
           bgColor: Colors.white, textColor: Colors.black, fadeTime: 1);
@@ -135,7 +165,8 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.pushNamed(context, '/addObjective');
   }
 
-  void _onNavClick(int index) {
+  // 导航点击切换index
+  void onNavClick(int index) {
     setState(() {
       _navSelectedIndex = index;
     });
@@ -162,9 +193,9 @@ class _MyHomePageState extends State<MyHomePage> {
           currentIndex: _navSelectedIndex,
           fixedColor: Colors.blue,
           type: BottomNavigationBarType.fixed,
-          onTap: _onNavClick),
+          onTap: onNavClick),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addObjective,
+        onPressed: addObjective,
         tooltip: '新增目标',
         child: Icon(Icons.add),
       ),
