@@ -15,4 +15,4 @@
 **[koa2-mysql-sequelize-JWT](https://github.com/ruralist-siyi/koa2-mysql-sequelize-JWT)**
 
 #### 三、项目演示：
- <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif1.gif" width="200"/>     <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif2.gif" width="200"/>
+ <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif1.gif" width="200" height="500"/>               <img src="https://github.com/ruralist-siyi/flutter-lazyNote/blob/master/images/flutter-gif2.gif" width="200" height="500"/>
